@@ -16,7 +16,7 @@ double * convolute_mkl(int kernel_size, int input_size,double* kernel_matrix,dou
     //the number of columns is the number of elements in kernel_vec
     //number of rows is the number of posititions the kernel could take. 1st row being by placing the kernel(after rotation) on the top left corner.
     //Next ones by oving right till possible. Then move down and repeat
-    
+
     double * A = (double*) MKL_malloc(Arows*Acols*sizeof(double),64);
     double * B = (double*) MKL_malloc(Acols*sizeof(double),64);
 
@@ -67,6 +67,7 @@ double * convolute_mkl(int kernel_size, int input_size,double* kernel_matrix,dou
 
    MKL_free(A);
    MKL_free(B);
+   
    return C;//returns ouptut matrix C in row major order
 
 

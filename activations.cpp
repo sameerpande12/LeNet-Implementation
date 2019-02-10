@@ -7,7 +7,7 @@ using namespace::std;
 double* activations( bool flag,  int numrows, int numcols, double *matrix){
 	int m=numrows; //number of rows
 	int n=numcols; //number of columns
-
+  
 	double *output = new double[m*n];
 
 
@@ -22,6 +22,7 @@ double* activations( bool flag,  int numrows, int numcols, double *matrix){
 	else{
 		for(int i=0;i<m;++i){
 			for(int j=0;j<n;++j){
+
 				output[i*m+j]=relu(matrix[m*i+j]);
 			}
 		}

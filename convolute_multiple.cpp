@@ -32,26 +32,28 @@ double ** convolute_multiple(double** input_layers, int input_width, int input_c
     //input_layers[0] is the first 2d matrix of input_layers
     for(int i = 0 ;i < input_channels;i++){
       double *temp = filter_layers[j][i];
-
       tempeval[i] = convolute_mkl(filter_width, input_width,filter_layers[j][i],input_layers[i],toPad,pad_size);
 
       if(relu){
          int temp_numrows = input_width - filter_width + 2*pad_size + 1;
-         tempeval[i] = activations (false, temp_numrows, temp_numrows, tempeval[i] );
-         
+         tempeval[i] = activations (false, temp_numrows, temp_numrows, tempeval[i]);
       }
     }
+
     int temp_size = (input_width - filter_width + 2*pad_size+1)*(input_width - filter_width + 2*pad_size+1);
     double* templayer = new double [temp_size];
     //flattening to a single layer
     for(int i = 0 ; i < temp_size;i++){
       templayer[i] = biases[j];
+
       for(int k = 0;k < input_channels;k++){
+
         templayer[i]+= tempeval[k][i];
       }
     }
 
    output_layers[j] = templayer;
+   
   }
   return output_layers;
 }

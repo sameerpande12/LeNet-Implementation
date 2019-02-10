@@ -72,12 +72,14 @@ double*** read_filter_layers(char*name, int num_filters, int filter_width, int f
           filter_layers[i] = new double*[filter_depth];
           for(int j = 0;j<filter_depth;j++)filter_layers[i][j] = new double [filter_width*filter_width];
         }
-
+           int count = 0;
         double value;
         for(int i = 0;i<num_filters;i++){
           for(int j = 0;j<filter_depth;j++){
             for(int k = 0;k< filter_width*filter_width;k++){
               if(  file>>value ){
+                count++;
+                cout<<count<<endl;
                  filter_layers[i][j][k]=value;
               }
                else{
@@ -92,7 +94,7 @@ double*** read_filter_layers(char*name, int num_filters, int filter_width, int f
             biases[i] = value;
           }
           else {
-            cout<<"ERROR: While reading "<<name<<endl;
+            cout<<"ERROR: While reading for bias values from "<<name<<endl;
             return NULL;
           }
         }
@@ -116,10 +118,10 @@ int main(int argc, char** argv){
    input_layers[0] = input_matrix;
 
    double* biases = new double[20];
-   double *** filter_layers = read_filter_layers(argv[2],1,5,20,biases);
-   double *temp = filter_layers[0][0];
+   double *** filter_layers = read_filter_layers(argv[2],20,5,1,biases);
+   double *temp = filter_layers[0][0];// expected filter as  20 X 1 X 25
 
-   
+
    double** output_layers = convolute_multiple(input_layers, 28,1,filter_layers,biases,5,20,0,false,false);
 
 
@@ -131,6 +133,7 @@ int main(int argc, char** argv){
    biases = new double[50];
    filter_layers = read_filter_layers(argv[3],50,5,20,biases);
    output_layers = convolute_multiple(output_layers,12,20,filter_layers,biases,5,50,0,false,false);
+    // filter should be as 50 X 20 X 144
 
    num_channels_output_layers = 50;
    for(int i = 0;i<num_channels_output_layers;i++){
