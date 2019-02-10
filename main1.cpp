@@ -55,7 +55,7 @@ double* read_matrix(int *size, char *name){
 	*size = nrows;
 	return matrix;
 }
-double*** read_filter_layers(char*name, int num_filters, int filter_width, int filter_depth, double*bias){
+double*** read_filter_layers(char*name, int num_filters, int filter_width, int filter_depth, double*biases){
         int num_biases = num_filters;
         ifstream file;
         try{
@@ -101,7 +101,7 @@ double*** read_filter_layers(char*name, int num_filters, int filter_width, int f
 
 
 int main(int argc, char** argv){
-  //./exe processed_data.txt
+  //./exe processed_data.txt conv1.txt conv2.txt fc1.txt fc2.txt
 
   // input_matrix -> conv1 -> pooling -> con
    double *input_matrix;
@@ -111,8 +111,40 @@ int main(int argc, char** argv){
    double** input_layers = new double*[1];
    input_layers[0] = input_matrix;
 
-    double* biases = new double[20];  
+   double* biases = new double[20];
+   double *** filter_layers = read_filter_layers(argv[2],1,5,20,biases);
 
 
+   double** output_layers = convolute_multiple(input_layers, 28,1,filter_layers,biases,5,20,0,false,false);
+   int num_channels_output_layers = 20;
+   for(int i = 0;i<num_channels_output_layers;i++){
+     output_layers[i] = averagepool(2,24,2,0,output_layers[i]);
+   }
+
+   biases = new double[50];
+   filter_layers = read_filter_layers(argv[3],50,5,20,biases);
+   output_layers = convolute_multiple(output_layers,12,20,filter_layers,biases,5,50,0,false,false);
+
+   num_channels_output_layers = 50;
+   for(int i = 0;i<num_channels_output_layers;i++){
+     output_layers[i] = averagepool(2,8,2,0,output_layers[i]);
+   }
+
+   biases = new dobule[500];
+   filter_layers = read_filter_layers(argv[4],500,4,50,biases);
+   output_layers = convolute_multiple(output_layers,4,50,filter_layers,biases,4,500,0,false,false);
+
+   biases = new double[10];
+   filter_layers = read_filter_layers(argv[5],10,1,500,biases);
+   output_layers = convolute_multiple(output_layers,1,500,filter_layers,biases,1,10,0,false,false);
+   //output_layers 10 X 1 X 1 (for picorial representation) other wise it is just 10 X (1X1)
+
+   double prob_vector[10];
+   for(int i = 0;i<10;i++)prob_vector[i] = output_layers[i][0];
+   prob_vector = softmax(prob_vector,10);
+
+   for(int i = 0;i<10;i++){
+     cout<<i+1<<": "<<prob_vector[i]<<endl;
+   }
   return 0;
 }

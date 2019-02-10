@@ -4,6 +4,24 @@ contents = f.read();
 f.close()
 contents = contents.replace('[','');
 contents = contents.replace(']','');
-f = open("processed_data.txt","w");
+f = open("pdata.txt","w");
+f.write(contents);
+f.close();
+
+f = open("conv1.txt","r");
+contents = f.read();
+f.close();
+contents = contents.replace('[','');
+contents = contents.replace(']','');
+f = open("pconv1.txt","w");
+f.write(contents);
+f.close();
+
+f = open("conv2.txt","r");
+contents = f.read();
+f.close()
+contents = contents.replace('[','');
+contents = contents.replace(']','');
+f = open("pconv2.txt","w");
 f.write(contents);
 f.close()

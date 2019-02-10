@@ -1,13 +1,11 @@
 #include <iostream>
 using namespace std;
 
-double** averagepool(int filter_size,int matrix_size,int stride,double** input_matrix){
+double* averagepool(int filter_size,int matrix_size,int stride,double* input_matrix){
 // considering only the case when filter_size divides the matrix_size
     int output_size = (matrix_size+stride-1)/stride;
-    double ** output = new double*[output_size];
-    for(int iter = 0;iter<output_size;iter++){
-      output[iter] = new double[output_size];
-    }
+    double * output = new double[output_size*output_size];
+
 
     int i = 0;
     for(int i = 0;i<=(output_size-1)*stride;i=i+stride){
@@ -17,7 +15,7 @@ double** averagepool(int filter_size,int matrix_size,int stride,double** input_m
        int y = j;
        int tempi = i/stride;
        int tempj = j/stride;
-       output[tempi][tempj] = 0;
+       output[tempi*stride+ tempj] = 0;
 
        int u_limit = filter_size;
        if(x+filter_size-1>matrix_size-1){
@@ -30,11 +28,11 @@ double** averagepool(int filter_size,int matrix_size,int stride,double** input_m
        }
          for(int u = 0;u<u_limit;u++)
            for(int v =0;v<v_limit;v++)
-               output[tempi][tempj]+=input_matrix[u+x][v+y];
+               output[tempi*stride+tempj]+=input_matrix[(u+x)*matrix_size+v+y];
             //tempi tempj position in the output matrix
 
 
-         output[tempi][tempj]/=(u_limit*v_limit);
+         output[tempi*stride+tempj]/=(u_limit*v_limit);
 
      }
    }
@@ -42,27 +40,25 @@ double** averagepool(int filter_size,int matrix_size,int stride,double** input_m
  return output;
 }
 
-double** averagepool(int filter_size,int matrix_size,int stride,int padding_size,double** input_matrix){
+double* averagepool(int filter_size,int matrix_size,int stride,int padding_size,double* input_matrix){
   int new_matrix_size = matrix_size + 2*padding_size;
-  double ** padded_input = new double*[new_matrix_size];
-  for(int iter=0;iter<new_matrix_size;iter++){
-    padded_input[iter]= new double[new_matrix_size];
-  }
+  double * padded_input = new double[new_matrix_size*new_matrix_size];
+
 
   for(int i = 0;i<new_matrix_size;i++){
     if(i<padding_size || i>=new_matrix_size-padding_size){
-      for(int j =0;j<new_matrix_size;j++)padded_input[i][j]=0;
+      for(int j =0;j<new_matrix_size;j++)padded_input[i*new_matrix_size+j]=0;
     }
     else{
       for(int j=0;j<new_matrix_size;j++){
-        if(j<padding_size || j>=new_matrix_size-padding_size)padded_input[i][j]=0;
-        else padded_input[i][j]=input_matrix[i-padding_size][j-padding_size];
+        if(j<padding_size || j>=new_matrix_size-padding_size)padded_input[i*new_matrix_size+j]=0;
+        else padded_input[i*new_matrix_size+j]=input_matrix[(i-padding_size)*matrix_size+j-padding_size];
       }
 
     }
   }
 
-  double ** output = averagepool(filter_size,new_matrix_size,stride,padded_input);
+  double * output = averagepool(filter_size,new_matrix_size,stride,padded_input);
   return output;
 }
 /*

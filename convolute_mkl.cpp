@@ -16,17 +16,16 @@ double * convolute_mkl(int kernel_size, int input_size,double* kernel_matrix,dou
     //the number of columns is the number of elements in kernel_vec
     //number of rows is the number of posititions the kernel could take. 1st row being by placing the kernel(after rotation) on the top left corner.
     //Next ones by oving right till possible. Then move down and repeat
-
+    
     double * A = (double*) MKL_malloc(Arows*Acols*sizeof(double),64);
     double * B = (double*) MKL_malloc(Acols*sizeof(double),64);
-
-
 
 
     for(int i =0;i<Acols;i++){
       int x = i%kernel_size;
       int y = i/kernel_size;
-      B[i] = kernel_matrix[kernel_size*x+y];//computes B matrix for multiplication
+
+      B[i] = kernel_matrix[kernel_size*x+y]; //computes B matrix for multiplication
     }
 
 
