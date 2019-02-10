@@ -74,12 +74,13 @@ double*** read_filter_layers(char*name, int num_filters, int filter_width, int f
         }
            int count = 0;
         double value;
+      //  cout<<num_filters<<" "<<filter_depth<<" "<<filter_width*filter_width<<endl;
         for(int i = 0;i<num_filters;i++){
           for(int j = 0;j<filter_depth;j++){
             for(int k = 0;k< filter_width*filter_width;k++){
               if(  file>>value ){
                 count++;
-                cout<<count<<endl;
+                //cout<<i<<" "<<j<<" "<<k<<endl;
                  filter_layers[i][j][k]=value;
               }
                else{
@@ -120,7 +121,7 @@ int main(int argc, char** argv){
    double* biases = new double[20];
    double *** filter_layers = read_filter_layers(argv[2],20,5,1,biases);
    double *temp = filter_layers[0][0];// expected filter as  20 X 1 X 25
-
+  //conv1
 
    double** output_layers = convolute_multiple(input_layers, 28,1,filter_layers,biases,5,20,0,false,false);
 
@@ -134,6 +135,7 @@ int main(int argc, char** argv){
    filter_layers = read_filter_layers(argv[3],50,5,20,biases);
    output_layers = convolute_multiple(output_layers,12,20,filter_layers,biases,5,50,0,false,false);
     // filter should be as 50 X 20 X 144
+    //conv2
 
    num_channels_output_layers = 50;
    for(int i = 0;i<num_channels_output_layers;i++){
@@ -143,6 +145,7 @@ int main(int argc, char** argv){
    biases = new double[500];
    filter_layers = read_filter_layers(argv[4],500,4,50,biases);
    output_layers = convolute_multiple(output_layers,4,50,filter_layers,biases,4,500,0,false,false);
+
 
    biases = new double[10];
    filter_layers = read_filter_layers(argv[5],10,1,500,biases);
@@ -154,7 +157,7 @@ int main(int argc, char** argv){
    prob_vector = softmax(prob_vector,10);
 
    for(int i = 0;i<10;i++){
-     cout<<i+1<<": "<<prob_vector[i]<<endl;
+     cout<<i<<": "<<prob_vector[i]<<endl;
    }
   return 0;
 }
