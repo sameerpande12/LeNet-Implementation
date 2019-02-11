@@ -27,7 +27,8 @@ double * convolute_openblas(int kernel_size, int input_size,double* kernel_matri
     for(int i =0;i<Acols;i++){
       int x = i%kernel_size;
       int y = i/kernel_size;
-      B[i] = kernel_matrix[kernel_size*x+y];//create B matrix for multiplication
+
+      B[i] = kernel_matrix[kernel_size*y + x]; //computes B matrix for multiplication // kernel_matrix in row major order
     }
 
 
@@ -36,13 +37,14 @@ double * convolute_openblas(int kernel_size, int input_size,double* kernel_matri
        x = i/(input_size-kernel_size+1);
        y = i%(input_size-kernel_size+1);
        for(int j = 0;j<Acols;j++){
-         int tempx = y+ j%kernel_size;
-         int tempy = x + j/kernel_size;
+         int tempy = y+ j%kernel_size;
+         int tempx = x + j/kernel_size;
 
          tempx = tempx - pad_size;
          tempy = tempy - pad_size;
          if( tempx<input_size && tempx>=0 && tempy<input_size && tempy>=0){
                  A[i*Acols + j] = input_matrix[tempx*input_size + tempy];
+
                }
          else A[i*Acols + j] = 0;
        }
@@ -54,14 +56,14 @@ double * convolute_openblas(int kernel_size, int input_size,double* kernel_matri
    int n = 1;
    double alpha = 1.0;
    double beta = 0.0;
-  //  auto t1  = std::chrono::high_resolution_clock::now();
+    //auto t1  = std::chrono::high_resolution_clock::now();
     cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans,
                m, n, k, alpha, A, k, B, n, beta, C, n);
     //auto t2  = std::chrono::high_resolution_clock::now();
 
-     //std::chrono::duration<double> elapsed = t2-t1;
-   //cout<<elapsed.count()<<"\t";
-   // cout<<"Matirx (including padding) dimension:"<<input_size+2*pad_size<<endl;
+  //   std::chrono::duration<double> elapsed = t2-t1;
+//   cout<<elapsed.count()<<"\t";
+   //cout<<"Matirx (including padding) dimension:"<<input_size+2*pad_size<<endl;
    //cout<<"Kernel dimension:"<<kernel_size<<endl;
 
 

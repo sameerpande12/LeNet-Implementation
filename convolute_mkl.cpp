@@ -25,7 +25,7 @@ double * convolute_mkl(int kernel_size, int input_size,double* kernel_matrix,dou
       int x = i%kernel_size;
       int y = i/kernel_size;
 
-      B[i] = kernel_matrix[kernel_size*x+y]; //computes B matrix for multiplication
+      B[i] = kernel_matrix[kernel_size*y + x]; //computes B matrix for multiplication // kernel_matrix in row major order
     }
 
 
@@ -34,8 +34,8 @@ double * convolute_mkl(int kernel_size, int input_size,double* kernel_matrix,dou
        x = i/(input_size-kernel_size+1);
        y = i%(input_size-kernel_size+1);
        for(int j = 0;j<Acols;j++){
-         int tempx = y+ j%kernel_size;
-         int tempy = x + j/kernel_size;
+         int tempy = y+ j%kernel_size;
+         int tempx = x + j/kernel_size;
 
          tempx = tempx - pad_size;
          tempy = tempy - pad_size;
@@ -67,7 +67,7 @@ double * convolute_mkl(int kernel_size, int input_size,double* kernel_matrix,dou
 
    MKL_free(A);
    MKL_free(B);
-   
+
    return C;//returns ouptut matrix C in row major order
 
 
