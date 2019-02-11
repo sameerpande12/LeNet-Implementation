@@ -124,7 +124,14 @@ int main(int argc, char** argv){
   //conv1
 
    double** output_layers = convolute_multiple(input_layers, 28,1,filter_layers,biases,5,20,0,false,false);
-
+  // output_layer   20 X 576
+  /*for(int i = 0;i<20;i++){
+    for(int j = 0;j<576;j++){
+      cout<<output_layers[i][j]<<" ";
+      if(j%24==23)cout<<endl;
+      if(j%576==575)cout<<endl;
+    }
+  }*/
 
    int num_channels_output_layers = 20;
    for(int i = 0;i<num_channels_output_layers;i++){
@@ -136,6 +143,13 @@ int main(int argc, char** argv){
    output_layers = convolute_multiple(output_layers,12,20,filter_layers,biases,5,50,0,false,false);
     // filter should be as 50 X 20 X 144
     //conv2
+    for(int i = 0;i<50;i++){
+      for(int j = 0;j<64;j++){
+        cout<<output_layers[i][j]<<" ";
+        if(j%8==7)cout<<endl;
+        if(j%64==63)cout<<endl;
+      }
+    }
 
    num_channels_output_layers = 50;
    for(int i = 0;i<num_channels_output_layers;i++){
@@ -156,8 +170,8 @@ int main(int argc, char** argv){
    for(int i = 0;i<10;i++)prob_vector[i] = output_layers[i][0];
    prob_vector = softmax(prob_vector,10);
 
-   for(int i = 0;i<10;i++){
+   /*for(int i = 0;i<10;i++){
      cout<<i<<": "<<prob_vector[i]<<endl;
-   }
+   }*/
   return 0;
 }
