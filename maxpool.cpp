@@ -17,7 +17,7 @@ double* maxpool(int filter_size,int matrix_size,int stride,double* A){
      int y = j;
      int tempi = i/stride;
      int tempj = j/stride;
-     C[tempi*stride+tempj] = A[x*matrix_size+y];
+     C[tempi*output_size+tempj] = A[x*matrix_size+y];
      int u_limit = filter_size;//u_limit is the maximum permissible value of u so a
      if(x+filter_size-1>matrix_size-1){//occurs when top-left corner of filter is on the input but the top right corner is not
        u_limit = matrix_size - x;
@@ -30,7 +30,7 @@ double* maxpool(int filter_size,int matrix_size,int stride,double* A){
 
      for(int u = 0;u<u_limit;u++)
        for(int v =0;v<v_limit;v++)
-           if(C[tempi*stride+tempj]<A[(u+x)*matrix_size+v+y])C[tempi*stride+tempj]=A[(u+x)*matrix_size+v+y];
+           if(C[tempi*output_size+tempj]<A[(u+x)*matrix_size+v+y])C[tempi*output_size+tempj]=A[(u+x)*matrix_size+v+y];
 
    }
   }

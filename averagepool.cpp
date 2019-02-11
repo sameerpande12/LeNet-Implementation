@@ -15,7 +15,7 @@ double* averagepool(int filter_size,int matrix_size,int stride,double* input_mat
        int y = j;
        int tempi = i/stride;
        int tempj = j/stride;
-       output[tempi*stride+ tempj] = 0;
+       output[tempi*output_size+ tempj] = 0;
 
        int u_limit = filter_size;
        if(x+filter_size-1>matrix_size-1){
@@ -28,7 +28,7 @@ double* averagepool(int filter_size,int matrix_size,int stride,double* input_mat
        }
          for(int u = 0;u<u_limit;u++)
            for(int v =0;v<v_limit;v++)
-               output[tempi*stride+tempj]+=input_matrix[(u+x)*matrix_size+v+y];
+               output[tempi*output_size+tempj]+=input_matrix[(u+x)*matrix_size+v+y];
             //tempi tempj position in the output matrix
 
 
