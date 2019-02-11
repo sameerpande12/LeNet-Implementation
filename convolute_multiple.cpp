@@ -34,10 +34,6 @@ double ** convolute_multiple(double** input_layers, int input_width, int input_c
       double *temp = filter_layers[j][i];
       tempeval[i] = convolute_mkl(filter_width, input_width,filter_layers[j][i],input_layers[i],toPad,pad_size);
 
-      if(relu){
-         int temp_numrows = input_width - filter_width + 2*pad_size + 1;
-         tempeval[i] = activations (false, temp_numrows, temp_numrows, tempeval[i]);
-      }
     }
 
     int temp_size = (input_width - filter_width + 2*pad_size+1)*(input_width - filter_width + 2*pad_size+1);
@@ -50,10 +46,14 @@ double ** convolute_multiple(double** input_layers, int input_width, int input_c
 
         templayer[i]+= tempeval[k][i];
       }
+
+      if(relu){
+        if(templayer[i]<0) templayer[i]=0;
+      }
     }
 
    output_layers[j] = templayer;
-   
+
   }
   return output_layers;
 }
