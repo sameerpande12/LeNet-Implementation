@@ -6,7 +6,6 @@
 #include <math.h>
 #include <algorithm>
 #include <vector>
-#include <map>
 #include<chrono>
 #include "activations.h"
 #include "pooling.h"
@@ -65,6 +64,10 @@ float*** read_filter_layers(char*name, int num_filters, int filter_width, int fi
 /*
 Creates filter layers from the file name specfied in char*name with give variables with their names standing for themselves. THe filter is read in row major order.
 The last num_filter values are considered biases
+
+filter_layers[i] denotes ith filter
+filter_layers[i][j] denotes jth matrix in row major order from ith filter
+all i j in 0 base indexing
 */
         int num_biases = num_filters;
 
@@ -173,14 +176,18 @@ int main(int argc, char** argv){
 
    float* prob_vector = new float[10];
    for(int i = 0;i<10;i++)prob_vector[i] = output_layers[i][0];
-   prob_vector = softmax(prob_vector,10);
+   prob_vector = softmax(prob_vector,10);//softmaxing
 
-   map <float,int> probMap;
-   for(int i = 0;i<10;i++)probMap.insert(pair<float,int>(prob_vector[i],i));
+    pair<float,int> pairs[10];
+    for(int i = 0;i<10;i++){
+      pairs[i].first = prob_vector[i];
+      pairs[i].second = i;
+    }
 
-   sort(prob_vector,prob_vector+10,std::greater<>());
+    sort(pairs,pairs+10,std::greater<>());
+
    cout<<"Top 5 predicted digits in decreasing of their probabilities "<<endl;
-   for(int i =0;i<5;i++)cout<<"Digit "<<probMap[prob_vector[i]]<<"- Probability:"<<prob_vector[i]<<endl;
+   for(int i =0;i<5;i++)cout<<"Digit "<<pairs[i].second<<"- Probability:"<<pairs[i].first<<endl;
 
 //   auto t2  = std::chrono::high_resolution_clock::now();
 //   std::chrono::duration<float> elapsed = t2-t1;
