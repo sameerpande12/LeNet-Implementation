@@ -41,7 +41,7 @@ void* matrix_pthread_helper(void * struct_pointer)
 
 
 }
-double *convolute_pthread(int kernel_size,int input_size,double* kernel_matrix,double* input_matrix, int no_threads){
+double *convolute_pthread(int kernel_size,int input_size,double* kernel_vec,double* input_matrix, int no_threads){
   int temp_nrows = (input_size-kernel_size+1)*(input_size-kernel_size+1);
   int temp_ncols = kernel_size*kernel_size; // temp_matrix is the toeplitz matrix which was uploaded on piazza
   //the number of columns is the number of elements in kernel_vec
@@ -59,12 +59,7 @@ double *convolute_pthread(int kernel_size,int input_size,double* kernel_matrix,d
     }
   }
 
-  double * kernel_vec = new double[kernel_size*kernel_size];//creating the vector to represent of kernel.
-  int kernel_vec_size = temp_ncols;
 
-  for(int i = 0;i<kernel_vec_size;i++){
-    kernel_vec[i] = kernel_matrix[i];//Reading in straight order unlike assignment 1
-  }
 
   //output matrix
   int output_size = input_size-kernel_size+1;
