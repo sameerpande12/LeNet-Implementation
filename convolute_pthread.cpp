@@ -8,7 +8,7 @@ using namespace std;
 using namespace std::chrono;
 struct thread_args
  {
-    double *vector_, **mat_row;
+    double *vector_, *mat_row;
     double *answer;
     int size,start,end,tid;
 
@@ -17,7 +17,7 @@ void* matrix_pthread_helper(void * struct_pointer)
 {
   struct thread_args *structure=(struct thread_args *)struct_pointer;
   double *vec=structure->vector_;
-  double **mat_row=structure->mat_row;
+  double *mat_row=structure->mat_row;
   int vec_size=structure->size;
   int tid=structure->tid;
   int start=structure->start;
@@ -32,7 +32,7 @@ void* matrix_pthread_helper(void * struct_pointer)
   {
     answer_temp[j]=0;
     for(int i=0;i<vec_size;++i)
-      answer_temp[j]+=mat_row[j][i]*vec[i];
+      answer_temp[j]+=mat_row[j*vec_size+ i]*vec[i];
   }
 
   int a[]={1,3};
@@ -41,25 +41,21 @@ void* matrix_pthread_helper(void * struct_pointer)
 
 
 }
-double **convolute_pthread(int kernel_size,int input_size,double** kernel_matrix,double** input_matrix, int no_threads){
+double *convolute_pthread(int kernel_size,int input_size,double* kernel_matrix,double* input_matrix, int no_threads){
   int temp_nrows = (input_size-kernel_size+1)*(input_size-kernel_size+1);
   int temp_ncols = kernel_size*kernel_size; // temp_matrix is the toeplitz matrix which was uploaded on piazza
   //the number of columns is the number of elements in kernel_vec
   //number of rows is the number of posititions the kernel could take. 1st row being by placing the kernel(after rotation) on the top left corner.
   //Next ones by oving right till possible. Then move down and repeat
 
-  double ** temp_matrix = new double*[temp_nrows];
-  for(int i = 0;i<temp_nrows;i++){
-    temp_matrix[i] = new double[temp_ncols];
-  }
-
+  double * temp_matrix=new double[temp_ncols*temp_nrows]; ;
 
   for(int i = 0;i<temp_nrows;i++){
     int x,y;
     x = i/(input_size-kernel_size+1);
     y = i%(input_size-kernel_size+1);
     for(int j = 0;j<temp_ncols;j++){
-      temp_matrix[i][j] = input_matrix[x+j/kernel_size][y+(j%kernel_size)];
+      temp_matrix[i*temp_ncols + j] = input_matrix[(x+j/kernel_size)*temp_ncols + y+(j%kernel_size)];
     }
   }
 
@@ -67,14 +63,12 @@ double **convolute_pthread(int kernel_size,int input_size,double** kernel_matrix
   int kernel_vec_size = temp_ncols;
 
   for(int i = 0;i<kernel_vec_size;i++){
-    kernel_vec[i] = kernel_matrix[i/kernel_size][i%kernel_size];//Reading in straight order unlike assignment 1
+    kernel_vec[i] = kernel_matrix[i];//Reading in straight order unlike assignment 1
   }
 
-  double ** output = new double*[input_size-kernel_size+1];//output matrix
+  //output matrix
   int output_size = input_size-kernel_size+1;
-  for(int i = 0;i<output_size;i++){
-    output[i] = new double[output_size];
-  }// output_vec = temp_matrix X kernel_vec;
+  // output_vec = temp_matrix X kernel_vec;
   /*do multiplication here*/
 
   pthread_t threads[no_threads];
@@ -107,30 +101,26 @@ double **convolute_pthread(int kernel_size,int input_size,double** kernel_matrix
   //std::chrono::duration <double> ti=t2-t1;
   //cout<<ti.count()<<" ";
   //cout<<"Time taken in multi threading is "<<(t2-t1).count()<<endl;
-  for(int i =0;i<temp_nrows;i++){
-    int z = input_size-kernel_size+1;
-    output[i/z][i%z]=output_vec[i];
-  }//read the output_vec and make output matrix. output of the form double [][]
+  //read the output_vec and make output matrix. output of the form double [][]
 
-  return output;
+  return output_vec;
 }
-double **convolute_pthread(int kernel_size,int input_size,double** kernel_matrix,double** input_matrix,bool padding,int padding_size, int num_threads=2){
+double *convolute_pthread(int kernel_size,int input_size,double* kernel_matrix,double* input_matrix,bool padding,int padding_size, int num_threads=2){
   //need to check if number of threads is less the number of rows, otherisw invalid input
-  double **output;//assumes padding_size to be non negative integer
+  double *output;//assumes padding_size to be non negative integer
   if(padding){
     int new_matrix_size = input_size+2*padding_size;//since padding means adding p rows up and down, p columns to left and right. The length of square increases by 2*padding_size
-    double ** new_input_matrix = new double*[new_matrix_size];
-    for(int i = 0;i<new_matrix_size;i++)new_input_matrix[i]= new double[new_matrix_size];
+    double * new_input_matrix =new double[new_matrix_size*new_matrix_size];
 
     for(int i = 0;i<new_matrix_size;i++){
       for(int j = 0;j<new_matrix_size;j++){
         if(i<padding_size || i>=new_matrix_size-padding_size){
-          new_input_matrix[i][j]=0;//making the additionally added rows 0
+          new_input_matrix[i*new_matrix_size+ j]=0;//making the additionally added rows 0
         }
         else if(j<padding_size || j>=new_matrix_size-padding_size){
-          new_input_matrix[i][j]=0;//making the additionally added column element zero
+          new_input_matrix[i*new_matrix_size+ j]=0;//making the additionally added column element zero
         }
-        else new_input_matrix[i][j] = input_matrix[i-padding_size][j-padding_size];
+        else new_input_matrix[i*new_matrix_size+ j] = input_matrix[(i-padding_size)*new_matrix_size+ j-padding_size];
 
       }
     }
