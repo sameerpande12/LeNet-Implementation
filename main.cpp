@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <vector>
 #include <map>
-
+#include<chrono>
 #include "activations.h"
 #include "convolution.h"
 #include "pooling.h"
@@ -18,7 +18,7 @@
 #include "convolute_pthread.h"
 #include "convolute_multiple.h"
 using namespace std;
-
+using namespace std::chrono;
 float* read_matrix(int *size, char *name){
 /*Reads (square_matrix) data given in the file with above name.*/
 /*modifies the size variable such that *size will store the row/column size*/
@@ -125,7 +125,7 @@ int main(int argc, char** argv){
    float *** filter_layers = read_filter_layers(argv[2],20,5,1,biases);
    float *temp = filter_layers[0][0];// expected filter as  20 X 1 X 25
   //conv1
-
+ auto t1  = std::chrono::high_resolution_clock::now();
    float** output_layers = convolute_multiple(input_layers, 28,1,filter_layers,biases,5,20,0,false,false);
   // output_layer   20 X 576
 
@@ -152,9 +152,13 @@ int main(int argc, char** argv){
 
    biases = new float[10];
    filter_layers = read_filter_layers(argv[5],10,1,500,biases);
+
    output_layers = convolute_multiple(output_layers,1,500,filter_layers,biases,1,10,0,false,false);
    //output_layers 10 X 1 X 1 (for picorial representation) other wise it is just 10 X (1X1)
 
+auto t2  = std::chrono::high_resolution_clock::now();
+std::chrono::duration<float> elapsed = t2-t1;
+cout<<"time:"<<elapsed.count()<<"\n";
 
 
    float* prob_vector = new float[10];
