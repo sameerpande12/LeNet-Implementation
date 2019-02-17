@@ -24,3 +24,9 @@ $2 = name of a file in which you need to temporarily store the processed data (t
 
 2.Image is processed
 3.“exe” file is run and the output is printed on terminal
+
+
+Therefore to run LeNet implementation
+
+chmod +x execute.sh
+./execute.sh {digit_image} {temp_data_file_name}
