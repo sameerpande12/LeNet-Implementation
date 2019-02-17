@@ -16,7 +16,7 @@
 
 \section{Introduction}
 
-Image processing has been on the rise with the advent of neural networks and machine learning in the past decade. It has therefore become almost absolutely necessary to have image processing libraries to perform convolution, to calculate correlation, linear activations and all the other functions which are the building blocks of any image recognition API. 
+Image processing has been on the rise with the advent of neural networks and machine learning in the past decade. It has therefore become almost absolutely necessary to have image processing libraries to perform convolution, to calculate correlation, linear activations and all the other functions which are the building blocks of any image recognition API.
 In our assignment one, we had to implement this only. In our first subtask we made our own functions for convolution, relu activation, tanh activations, convolution using matrix multiplication, convolution using iteration and so on. In the subtask 2, what we were required to do was to make this process more efficient via exploring \begin{itemize}
 \item Already available Linear Algebra libraries having all the optimisation techniques like mkl and openBlas
 \item Exploring multi threading for making the process of matrix multiplication parallel and more efficient.
@@ -38,10 +38,11 @@ In this subtask we shall go through each library and compare their performances 
 %\end{figure}
 
 
-\section{MKL library}
+\section{MKL and Open library}
+IntelMKL and OpenBlas have been used to boost matrix multiplication. Both use a function named "cblas_sgemm" to peform accelerated matrix multiplication. The function takes two input matrices as float* and their specifications (ex. row-major or column-major etc.) and returns computed answer as a float* with specified order (row-major or column-major).
+We have observed that when the input size and kernel sizes are smaller, the MKL and OpenBlas is outperformed by regular convolution but as size of input and filter increases, these libraries start showing significant improvements over the regular convolution methods. 
 
-lol \cite{small}
-\section{OpenBlas}
+
 
 
 \section{Pthread}
@@ -52,7 +53,7 @@ The overhead time cost is negligible for large and small values of filters and i
 \section{Comparison}
 To compare how the publicaly available libraries - mkl, and openBlas, and our multi threading implementation fared against our original matrix multiplication, we did a comparative study of all of these by running them on a random set of inputs.
 
-For doing this comparative study, we calculated the time taken by each of them to multiply two random matrices (one input matrix, and the other kernel), with the size of the input matrix being varied from 32 to 1024, and the size of kernel taken as 3 and 5 for all the input matrices. To calculate the time elapsed we made use of \textbf{high\_resolution\_clock} class present in \textbf{chrono} library. All the data was calculated in seconds, for kernel size of 3, the data is shown in table \ref{table:nonlin} while for the kernel of size 9, it is shown in table \ref{table:nonn}  
+For doing this comparative study, we calculated the time taken by each of them to multiply two random matrices (one input matrix, and the other kernel), with the size of the input matrix being varied from 32 to 1024, and the size of kernel taken as 3 and 5 for all the input matrices. To calculate the time elapsed we made use of \textbf{high\_resolution\_clock} class present in \textbf{chrono} library. All the data was calculated in seconds, for kernel size of 3, the data is shown in table \ref{table:nonlin} while for the kernel of size 9, it is shown in table \ref{table:nonn}
 
 \begin{table}[ht]
 \caption{Comparative Data for kernel size 3} % title of Table
@@ -71,7 +72,7 @@ Size of input & MKL & OpenBlas & Pthread & Normal \\ [0.5ex] % inserts table
 \hline %inserts single line
 \end{tabular}
 \label{table:nonlin} % is used to er this table in the text
-\end{table} 
+\end{table}
 
 
 \begin{table}[ht]
@@ -91,7 +92,7 @@ Size of input & MKL & OpenBlas & Pthread & Normal \\ [0.5ex] % inserts table
 \hline %inserts single line
 \end{tabular}
 \label{table:nonn} % is used to er this table in the text
-\end{table} 
+\end{table}
 
 From these tables we see that for smaller values of kernel and input size, our normal multiplication was faster than MKL and openBlas libraries. Our multi threading version was almost twice as fast as normal at these small sizes. As we begin to increase the size, we can see that pthread becomes slower. It is due to the overhead cost of creating threads. And as our sizes become $\approx 256$, MKL and openBlas emerge out to be the fastest. As our normal matrix mutiplication of the order of $\mathcal{O}(n^3)$, it begins to diverge while the optimisations in the libraries make them the fastest at this point.
 
