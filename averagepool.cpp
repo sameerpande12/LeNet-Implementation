@@ -10,7 +10,7 @@ float* averagepool(int filter_size,int matrix_size,int stride,float* input_matri
     int i = 0;
     for(int i = 0;i<=(output_size-1)*stride;i=i+stride){
      for(int j = 0;j<=(output_size-1)*stride; j=j+stride){
-
+// iterating through the output matrix
        int x = i;
        int y = j;
        int tempi = i/stride;
@@ -61,26 +61,4 @@ float* averagepool(int filter_size,int matrix_size,int stride,int padding_size,f
   float * output = averagepool(filter_size,new_matrix_size,stride,padded_input);
   return output;
 }
-/*
-int main(){
-  int matrix_size = 10; int filter_size = 3; int stride=2;
-  int output_size = (matrix_size-filter_size+stride)/stride;
-  float** a = new float*[matrix_size];
-  for(int i = 0;i<matrix_size;i++){
-    a[i]= new float[matrix_size];
-  }
-  for(int i = 0;i<matrix_size;i++){
-    for(int j = 0;j<matrix_size;j++ ){
-      a[i][j]=(i+j)*1.0;
-    }
-
-  }
-  float **b ;
-  b = averagepool(filter_size,matrix_size,stride,a);
-
-  for(int i = 0;i<output_size;i++){
-    for(int j = 0;j<output_size;j++)cout<<b[i][j]<<" ";
-    cout<<endl;
-  }
-}
-*/
+s

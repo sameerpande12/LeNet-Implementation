@@ -29,23 +29,3 @@ float* activations( bool flag,  int numrows, int numcols, float *matrix){
 	}
 	return output;
 }
-
-
-
-/*
-int main(){
-  float** a = new float*[4];
-  for(int i = 0;i<4;i++){
-    a[i]= new float[4];
-  }
-  for(int i = 0;i<4;i++){
-    for(int j = 0;j<4;j++ ){
-      a[i][j]=-(i+j)*1.0;
-    }
-  }
-  float **b ;
-   activations(false,make_pair(4,4),a);
-  cout<<a[0][0]<<" "<<a[0][1]<<endl<<a[1][0]<<" "<<a[1][1]<<endl;
-  return 0;
-}
-*/
