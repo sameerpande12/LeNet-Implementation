@@ -28,6 +28,7 @@ float* read_matrix(int *size, char *name){
   }
   catch (const ifstream::failure& e){
     cout<<"Exception opening the file "<<name << endl;
+    file.close();
     return NULL;
   }
 
@@ -39,11 +40,14 @@ float* read_matrix(int *size, char *name){
   int nrows = round(sqrt(input_vec.size()));
   if(nrows*nrows != input_vec.size()){
     cout<<"Error:Matrix in "<<name<< "is not square. Please make sure it is"<<endl;
+    file.close();
+    return NULL;
   }
 
   int ncols = nrows;
   if(nrows==0){
 		cout<<"Error:"<<name<<" is empty"<<endl;
+    file.close();
 		return NULL;
 	}//exit if file is empty
 
@@ -58,13 +62,19 @@ float* read_matrix(int *size, char *name){
 	return matrix;
 }
 float*** read_filter_layers(char*name, int num_filters, int filter_width, int filter_depth, float*biases){
+/*
+Creates filter layers from the file name specfied in char*name with give variables with their names standing for themselves. THe filter is read in row major order.
+The last num_filter values are considered biases
+*/
         int num_biases = num_filters;
+
         ifstream file;
         try{
           file.open(name);
         }
         catch (const ifstream::failure& e){
           cout<<"Exception opening the file "<<name << endl;
+          file.close();
           return NULL;
         }
 
@@ -74,19 +84,20 @@ float*** read_filter_layers(char*name, int num_filters, int filter_width, int fi
           filter_layers[i] = new float*[filter_depth];
           for(int j = 0;j<filter_depth;j++)filter_layers[i][j] = new float [filter_width*filter_width];
         }
-           int count = 0;
+
         float value;
-      //  cout<<num_filters<<" "<<filter_depth<<" "<<filter_width*filter_width<<endl;
+
         for(int i = 0;i<num_filters;i++){
           for(int j = 0;j<filter_depth;j++){
             for(int k = 0;k< filter_width*filter_width;k++){
               if(  file>>value ){
-                count++;
-                //cout<<i<<" "<<j<<" "<<k<<endl;
+
                  filter_layers[i][j][k]=value;
               }
                else{
+
                  cout<<"ERROR While Reading "<<name<<endl;
+                 file.close();
                  return NULL;
                }
             }
@@ -94,13 +105,15 @@ float*** read_filter_layers(char*name, int num_filters, int filter_width, int fi
         }
         for(int i = 0;i<num_biases;i++){
           if(file>>value){
-            biases[i] = value;
+            biases[i] = value;// reading the bias values
           }
           else {
             cout<<"ERROR: While reading for bias values from "<<name<<endl;
+            file.close();
             return NULL;
           }
         }
+        file.close();
         return filter_layers;
 
 }
