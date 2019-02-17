@@ -111,7 +111,7 @@ int main(int argc, char** argv){
   // To run the input->        ./exe processed_data.txt conv1.txt conv2.txt fc1.txt fc2.txt
 
   // input_matrix -> conv1 -> pooling -> con
-
+  // auto t1  = std::chrono::high_resolution_clock::now();
    float *input_matrix;
    int input_row_size;
 
@@ -125,7 +125,7 @@ int main(int argc, char** argv){
    float *** filter_layers = read_filter_layers(argv[2],20,5,1,biases);
    float *temp = filter_layers[0][0];// expected filter as  20 X 1 X 25
   //conv1
- auto t1  = std::chrono::high_resolution_clock::now();
+
    float** output_layers = convolute_multiple(input_layers, 28,1,filter_layers,biases,5,20,0,false,false);
   // output_layer   20 X 576
 
@@ -156,9 +156,7 @@ int main(int argc, char** argv){
    output_layers = convolute_multiple(output_layers,1,500,filter_layers,biases,1,10,0,false,false);
    //output_layers 10 X 1 X 1 (for picorial representation) other wise it is just 10 X (1X1)
 
-auto t2  = std::chrono::high_resolution_clock::now();
-std::chrono::duration<float> elapsed = t2-t1;
-cout<<"time:"<<elapsed.count()<<"\n";
+
 
 
    float* prob_vector = new float[10];
@@ -169,9 +167,12 @@ cout<<"time:"<<elapsed.count()<<"\n";
    for(int i = 0;i<10;i++)probMap.insert(pair<float,int>(prob_vector[i],i));
 
    sort(prob_vector,prob_vector+10,std::greater<>());
+   cout<<"Top 5 predicted digits in decreasing of their probabilities "<<endl;
+   for(int i =0;i<5;i++)cout<<"Digit "<<probMap[prob_vector[i]]<<"- Probability:"<<prob_vector[i]<<endl;
 
-   for(int i =0;i<10;i++)cout<<"Digit "<<probMap[prob_vector[i]]<<"- Probability:"<<prob_vector[i]<<endl;
-
+//   auto t2  = std::chrono::high_resolution_clock::now();
+//   std::chrono::duration<float> elapsed = t2-t1;
+//   cout<<"Time :"<<elapsed.count()<<"\n";
 
    return 0;
 }
