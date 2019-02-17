@@ -166,7 +166,7 @@ int main(int argc, char** argv){
 
    sort(prob_vector,prob_vector+10,std::greater<>());
 
-   for(int i =0;i<10;i++)cout<<probMap[prob_vector[i]]<<": "<<prob_vector[i]<<endl;
+   for(int i =0;i<10;i++)cout<<"Digit "<<probMap[prob_vector[i]]<<"- Probability:"<<prob_vector[i]<<endl;
 
 
    return 0;
