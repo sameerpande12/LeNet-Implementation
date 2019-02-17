@@ -38,6 +38,7 @@ float ** convolute_multiple(float** input_layers, int input_width, int input_cha
 
     int temp_size = (input_width - filter_width + 2*pad_size+1)*(input_width - filter_width + 2*pad_size+1);
     float* templayer = new float [temp_size];
+    
     //flattening to a single layer
     for(int i = 0 ; i < temp_size;i++){
       templayer[i] = biases[j];

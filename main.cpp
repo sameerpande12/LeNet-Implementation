@@ -9,7 +9,6 @@
 #include <map>
 #include<chrono>
 #include "activations.h"
-#include "convolution.h"
 #include "pooling.h"
 #include "sigmoid.h"
 #include "softmax.h"
