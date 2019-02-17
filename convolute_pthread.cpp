@@ -55,7 +55,7 @@ double *convolute_pthread(int kernel_size,int input_size,double* kernel_matrix,d
     x = i/(input_size-kernel_size+1);
     y = i%(input_size-kernel_size+1);
     for(int j = 0;j<temp_ncols;j++){
-      temp_matrix[i*temp_ncols + j] = input_matrix[(x+j/kernel_size)*temp_ncols + y+(j%kernel_size)];
+      temp_matrix[i*temp_ncols + j] = input_matrix[(x+j/kernel_size)*input_size + y+(j%kernel_size)];
     }
   }
 
@@ -120,7 +120,7 @@ double *convolute_pthread(int kernel_size,int input_size,double* kernel_matrix,d
         else if(j<padding_size || j>=new_matrix_size-padding_size){
           new_input_matrix[i*new_matrix_size+ j]=0;//making the additionally added column element zero
         }
-        else new_input_matrix[i*new_matrix_size+ j] = input_matrix[(i-padding_size)*new_matrix_size+ j-padding_size];
+        else new_input_matrix[i*new_matrix_size+ j] = input_matrix[(i-padding_size)*input_size+ j-padding_size];
 
       }
     }

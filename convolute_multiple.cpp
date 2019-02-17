@@ -32,7 +32,7 @@ double ** convolute_multiple(double** input_layers, int input_width, int input_c
     //input_layers[0] is the first 2d matrix of input_layers
     for(int i = 0 ;i < input_channels;i++){
       double *temp = filter_layers[j][i];
-      tempeval[i] = convolute_mkl(filter_width, input_width,filter_layers[j][i],input_layers[i],toPad,pad_size);
+      tempeval[i] = convolute_pthread(filter_width, input_width,filter_layers[j][i],input_layers[i],toPad,pad_size);
 
     }
 

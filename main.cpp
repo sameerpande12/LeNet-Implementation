@@ -143,14 +143,15 @@ int main(int argc, char** argv){
    output_layers = convolute_multiple(output_layers,12,20,filter_layers,biases,5,50,0,false,false);
     // filter should be as 50 X 20 X 144
     //conv2
-  /*  for(int i = 0;i<50;i++){
-      for(int j = 0;j<64;j++){
-        cout<<output_layers[i][j]<<" ";
-        if(j%8==7)cout<<endl;
-        if(j%64==63)cout<<endl;
+   /*
+       for(int i = 0;i<50;i++){
+            for(int j = 0;j<64;j++){
+             cout<<output_layers[i][j]<<" ";
+             if(j%8==7)cout<<endl;
+             if(j%64==63)cout<<endl;
+            }
       }
-    }
-*/
+  */
    num_channels_output_layers = 50;
    for(int i = 0;i<num_channels_output_layers;i++){
      output_layers[i] = maxpool(2,8,2,0,output_layers[i]);
