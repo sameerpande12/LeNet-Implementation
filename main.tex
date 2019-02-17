@@ -24,22 +24,10 @@ In our assignment one, we had to implement this only. In our first subtask we ma
 
 In this subtask we shall go through each library and compare their performances on different sets of inputs.
 
-%\begin{figure}[!htbp]
-%\begin{center}
-%\begin{tikzpicture}
-%\draw[domain=-2:2, color=blue] plot (\x, {1 - (\x)^2}) node[above = .5cm, right, color=blue] {$f(x)=1-x^2$};
-%\draw[domain=-2:2, color=red] plot(\x,-1 * \x + 1.25) node[above = .5cm, right, color=red] {Tangent at $x=.5$};
-%\draw [thick, ->] (-3,0) -- (3,0) node [above] {$x$};
-%\draw [thick, ->] (0,-3) -- (0,3) node [right] {$y$};
-%\node at (.5,.75) {\textbullet};
-%\end{tikzpicture}
-%\end{center}
-%\caption{The plot of $f(x)=1-x^2$ with a tangent at $x=.5$.} \label{exampleplot}
-%\end{figure}
 
 
 \section{MKL and Open library}
-IntelMKL and OpenBlas have been used to boost matrix multiplication. Both use a function named "cblas_sgemm" to peform accelerated matrix multiplication. The function takes two input matrices as float* and their specifications (ex. row-major or column-major etc.) and returns computed answer as a float* with specified order (row-major or column-major).
+IntelMKL $^{ \cite{MKLLibrary}}$ and OpenBlas $^{\cite{OpenBlas}}$ have been used to boost matrix multiplication. Both use a function named "cblas\_sgemm" to peform accelerated matrix multiplication. The function takes two input matrices as float* and their specifications (ex. row-major or column-major etc.) and returns computed answer as a float* with specified order (row-major or column-major).
 We have observed that when the input size and kernel sizes are smaller, the MKL and OpenBlas is outperformed by regular convolution but as size of input and filter increases, these libraries start showing significant improvements over the regular convolution methods. 
 
 
@@ -48,7 +36,7 @@ We have observed that when the input size and kernel sizes are smaller, the MKL 
 \section{Pthread}
 To implement multi threading, we made use of pthread module of C++. This allowed us to perform parallel computations in matrix multiplication, as to fully utilise our CPU resources. But for this implementation to be any faster, our number of threads must be equal to the number of cores in the processor, otherwise this technique renders itself to be useless. If number of threads are more, waiting time exists, and the overhead time cost of creating a thread makes the process even slower. Therefore in order to optimise our function we set the number of threads to be 2 which will in most cases decrease the time. For faster time, you can pass the argument as a parameter.
 The overhead time cost is negligible for large and small values of filters and inputs but for intermediate values, it becomes considerable enough and the normal multiplication becomes as fast as pthread implementation. It can be seen in the tables \ref{table:nonn} and \ref{table:nonlin} and also in figures \ref{3filter} and \ref{9filter}.
-
+ 
 
 \section{Comparison}
 To compare how the publicaly available libraries - mkl, and openBlas, and our multi threading implementation fared against our original matrix multiplication, we did a comparative study of all of these by running them on a random set of inputs.
@@ -123,4 +111,5 @@ After implementing each of the above models, we see that for small values of fil
 
 \bibliographystyle{plain}
 \bibliography{bibliography.bib}
+
 \end{document}
