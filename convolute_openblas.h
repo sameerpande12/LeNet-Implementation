@@ -1,4 +1,4 @@
 #pragma once
 using namespace:: std;
 
-double * convolute_openblas(int kernel_size, int input_size,double* kernel_matrix,double* input_matrix,bool toPad, int pad_size);
+float * convolute_openblas(int kernel_size, int input_size,float* kernel_matrix,float* input_matrix,bool toPad, int pad_size);

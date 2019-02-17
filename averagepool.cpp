@@ -1,10 +1,10 @@
 #include <iostream>
 using namespace std;
 
-double* averagepool(int filter_size,int matrix_size,int stride,double* input_matrix){
+float* averagepool(int filter_size,int matrix_size,int stride,float* input_matrix){
 // considering only the case when filter_size divides the matrix_size
     int output_size = (matrix_size+stride-1)/stride;
-    double * output = new double[output_size*output_size];
+    float * output = new float[output_size*output_size];
 
 
     int i = 0;
@@ -40,9 +40,9 @@ double* averagepool(int filter_size,int matrix_size,int stride,double* input_mat
  return output;
 }
 
-double* averagepool(int filter_size,int matrix_size,int stride,int padding_size,double* input_matrix){
+float* averagepool(int filter_size,int matrix_size,int stride,int padding_size,float* input_matrix){
   int new_matrix_size = matrix_size + 2*padding_size;
-  double * padded_input = new double[new_matrix_size*new_matrix_size];
+  float * padded_input = new float[new_matrix_size*new_matrix_size];
 
 
   for(int i = 0;i<new_matrix_size;i++){
@@ -58,16 +58,16 @@ double* averagepool(int filter_size,int matrix_size,int stride,int padding_size,
     }
   }
 
-  double * output = averagepool(filter_size,new_matrix_size,stride,padded_input);
+  float * output = averagepool(filter_size,new_matrix_size,stride,padded_input);
   return output;
 }
 /*
 int main(){
   int matrix_size = 10; int filter_size = 3; int stride=2;
   int output_size = (matrix_size-filter_size+stride)/stride;
-  double** a = new double*[matrix_size];
+  float** a = new float*[matrix_size];
   for(int i = 0;i<matrix_size;i++){
-    a[i]= new double[matrix_size];
+    a[i]= new float[matrix_size];
   }
   for(int i = 0;i<matrix_size;i++){
     for(int j = 0;j<matrix_size;j++ ){
@@ -75,7 +75,7 @@ int main(){
     }
 
   }
-  double **b ;
+  float **b ;
   b = averagepool(filter_size,matrix_size,stride,a);
 
   for(int i = 0;i<output_size;i++){

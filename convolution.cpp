@@ -5,16 +5,16 @@
 #include <chrono>
 using namespace std;
 using namespace std::chrono;
-double** convoluteByIteration(int kernel_size,int input_size,double **kernel,double** input_matrix){
+float** convoluteByIteration(int kernel_size,int input_size,float **kernel,float** input_matrix){
   //ASSUMES SQUARE MATRICES ONLY
 	//assuming the size of a as n*n
 	//assuming the size of b as m*m
 
-  double ** output = new double*[input_size-kernel_size+1];
+  float ** output = new float*[input_size-kernel_size+1];
 
   int output_size = input_size-kernel_size+1;
 	for(int i = 0;i<output_size;i++){
-    output[i] = new double[output_size];
+    output[i] = new float[output_size];
 	}//created output_matrix
 
 	for(int x= 0;x<output_size;x++){
@@ -30,16 +30,16 @@ double** convoluteByIteration(int kernel_size,int input_size,double **kernel,dou
   return output;
 }
 
-double **convoluteByMatrixMultiplication(int kernel_size,int input_size,double** kernel_matrix,double** input_matrix){
+float **convoluteByMatrixMultiplication(int kernel_size,int input_size,float** kernel_matrix,float** input_matrix){
   int temp_nrows = (input_size-kernel_size+1)*(input_size-kernel_size+1);
   int temp_ncols = kernel_size*kernel_size; // temp_matrix is the toeplitz matrix which was uploaded on piazza
   //the number of columns is the number of elements in kernel_vec
   //number of rows is the number of posititions the kernel could take. 1st row being by placing the kernel(after rotation) on the top left corner.
   //Next ones by oving right till possible. Then move down and repeat
 
-  double ** temp_matrix = new double*[temp_nrows];
+  float ** temp_matrix = new float*[temp_nrows];
   for(int i = 0;i<temp_nrows;i++){
-    temp_matrix[i] = new double[temp_ncols];
+    temp_matrix[i] = new float[temp_ncols];
   }
 
 
@@ -52,21 +52,21 @@ double **convoluteByMatrixMultiplication(int kernel_size,int input_size,double**
     }
   }
 
-  double * kernel_vec = new double[kernel_size*kernel_size];//creating the vector to represent of kernel.
+  float * kernel_vec = new float[kernel_size*kernel_size];//creating the vector to represent of kernel.
   int kernel_vec_size = temp_ncols;
 
   for(int i = 0;i<kernel_vec_size;i++){
     kernel_vec[i] = kernel_matrix[i/kernel_size][i%kernel_size];//Read in straight order for one to one overlap
   }
 
-  double ** output = new double*[input_size-kernel_size+1];//output matrix
+  float ** output = new float*[input_size-kernel_size+1];//output matrix
   int output_size = input_size-kernel_size+1;
 	for(int i = 0;i<output_size;i++){
-    output[i] = new double[output_size];
+    output[i] = new float[output_size];
 	}// output_vec = temp_matrix X kernel_vec;
   //auto t1=std::chrono::high_resolution_clock::now();
 
-  double* output_vec = new double[temp_nrows];
+  float* output_vec = new float[temp_nrows];
   for(int i = 0;i<temp_nrows;i++){
     output_vec[i]=0;
     for(int j = 0;j<temp_ncols;j++)
@@ -78,7 +78,7 @@ double **convoluteByMatrixMultiplication(int kernel_size,int input_size,double**
      // printf("Value calculated is %f in i=%d\n",output_vec[i],i);
   }
   //auto t2=std::chrono::high_resolution_clock::now();
-  //std::chrono::duration <double> lol=t2-t1;
+  //std::chrono::duration <float> lol=t2-t1;
   //cout<<lol.count()<<endl;
   for(int i =0;i<temp_nrows;i++){
     int z = input_size-kernel_size+1;
@@ -89,13 +89,13 @@ double **convoluteByMatrixMultiplication(int kernel_size,int input_size,double**
 }
 
 
-double ** convolution(int kernel_size,int input_size,double** kernel_matrix,double** input_matrix,bool byMultiplication,bool padding,int padding_size=0){
-  double ** output;//answer of convolution
+float ** convolution(int kernel_size,int input_size,float** kernel_matrix,float** input_matrix,bool byMultiplication,bool padding,int padding_size=0){
+  float ** output;//answer of convolution
   if(padding){
 
       int new_matrix_size = input_size+2*padding_size;//since padding means adding p rows up and down, p columns to left and right. The length of square increases by 2*padding_size
-      double ** new_input_matrix = new double*[new_matrix_size];
-      for(int i = 0;i<new_matrix_size;i++)new_input_matrix[i]= new double[new_matrix_size];
+      float ** new_input_matrix = new float*[new_matrix_size];
+      for(int i = 0;i<new_matrix_size;i++)new_input_matrix[i]= new float[new_matrix_size];
 
       for(int i = 0;i<new_matrix_size;i++){
         for(int j = 0;j<new_matrix_size;j++){

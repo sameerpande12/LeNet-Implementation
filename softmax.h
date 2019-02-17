@@ -2,4 +2,4 @@
 using namespace:: std;
 
 
-double* softmax(double* input_vector,int size);
+float* softmax(float* input_vector,int size);

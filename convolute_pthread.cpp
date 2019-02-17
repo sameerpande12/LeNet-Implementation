@@ -8,26 +8,26 @@ using namespace std;
 using namespace std::chrono;
 struct thread_args
  {
-    double *vector_, *mat_row;
-    double *answer;
+    float *vector_, *mat_row;
+    float *answer;
     int size,start,end,tid;
 
 };
 void* matrix_pthread_helper(void * struct_pointer)
 {
   struct thread_args *structure=(struct thread_args *)struct_pointer;
-  double *vec=structure->vector_;
-  double *mat_row=structure->mat_row;
+  float *vec=structure->vector_;
+  float *mat_row=structure->mat_row;
   int vec_size=structure->size;
   int tid=structure->tid;
   int start=structure->start;
   int end=structure->end;
-  double *answer_temp=structure->answer;
+  float *answer_temp=structure->answer;
 
   for(int i=0;i<(int)vec_size;++i);
 
 
-  double output[end-start];
+  float output[end-start];
   for(int j=start;j<end;j++)
   {
     answer_temp[j]=0;
@@ -41,14 +41,14 @@ void* matrix_pthread_helper(void * struct_pointer)
 
 
 }
-double *convolute_pthread(int kernel_size,int input_size,double* kernel_vec,double* input_matrix, int no_threads){
+float *convolute_pthread(int kernel_size,int input_size,float* kernel_vec,float* input_matrix, int no_threads){
   int temp_nrows = (input_size-kernel_size+1)*(input_size-kernel_size+1);
   int temp_ncols = kernel_size*kernel_size; // temp_matrix is the toeplitz matrix which was uploaded on piazza
   //the number of columns is the number of elements in kernel_vec
   //number of rows is the number of posititions the kernel could take. 1st row being by placing the kernel(after rotation) on the top left corner.
   //Next ones by oving right till possible. Then move down and repeat
 
-  double * temp_matrix=new double[temp_ncols*temp_nrows]; ;
+  float * temp_matrix=new float[temp_ncols*temp_nrows]; ;
 
   for(int i = 0;i<temp_nrows;i++){
     int x,y;
@@ -69,11 +69,11 @@ double *convolute_pthread(int kernel_size,int input_size,double* kernel_vec,doub
   pthread_t threads[no_threads];
   int rc=0;;
   struct thread_args args[no_threads];
-  double* output_vec = new double[temp_nrows];
+  float* output_vec = new float[temp_nrows];
   auto t1=std::chrono::high_resolution_clock::now();
   for(int i=0;i<no_threads;++i)
   {
-    //double *temp_arr[4];
+    //float *temp_arr[4];
 
     args[i].vector_=kernel_vec;
     args[i].mat_row=temp_matrix;
@@ -93,19 +93,19 @@ double *convolute_pthread(int kernel_size,int input_size,double* kernel_vec,doub
   for (int i = 0; i < no_threads; i++)
         pthread_join(threads[i], NULL);
   //auto t2=std::chrono::high_resolution_clock::now();
-  //std::chrono::duration <double> ti=t2-t1;
+  //std::chrono::duration <float> ti=t2-t1;
   //cout<<ti.count()<<" ";
   //cout<<"Time taken in multi threading is "<<(t2-t1).count()<<endl;
-  //read the output_vec and make output matrix. output of the form double [][]
+  //read the output_vec and make output matrix. output of the form float [][]
 
   return output_vec;
 }
-double *convolute_pthread(int kernel_size,int input_size,double* kernel_matrix,double* input_matrix,bool padding,int padding_size, int num_threads=2){
+float *convolute_pthread(int kernel_size,int input_size,float* kernel_matrix,float* input_matrix,bool padding,int padding_size, int num_threads=2){
   //need to check if number of threads is less the number of rows, otherisw invalid input
-  double *output;//assumes padding_size to be non negative integer
+  float *output;//assumes padding_size to be non negative integer
   if(padding){
     int new_matrix_size = input_size+2*padding_size;//since padding means adding p rows up and down, p columns to left and right. The length of square increases by 2*padding_size
-    double * new_input_matrix =new double[new_matrix_size*new_matrix_size];
+    float * new_input_matrix =new float[new_matrix_size*new_matrix_size];
 
     for(int i = 0;i<new_matrix_size;i++){
       for(int j = 0;j<new_matrix_size;j++){

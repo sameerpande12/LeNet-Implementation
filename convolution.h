@@ -1,6 +1,6 @@
 #pragma once
 using namespace:: std;
 
-double** convoluteByIteration(int kernel_size,int input_size,double **kernel,double** input_matrix);
-double **convoluteByMatrixMultiplication(int kernel_size,int input_size,double** kernel_matrix,double** input_matrix);
-double ** convolution(int kernel_size,int input_size,double** kernel_matrix,double** input_matrix,bool byMultiplication,bool padding,int padding_size=0);
+float** convoluteByIteration(int kernel_size,int input_size,float **kernel,float** input_matrix);
+float **convoluteByMatrixMultiplication(int kernel_size,int input_size,float** kernel_matrix,float** input_matrix);
+float ** convolution(int kernel_size,int input_size,float** kernel_matrix,float** input_matrix,bool byMultiplication,bool padding,int padding_size=0);

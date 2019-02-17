@@ -2,11 +2,11 @@
 #include <math.h>
 using namespace std;
 
-double* softmax(double* input_vector,int size){
+float* softmax(float* input_vector,int size){
   //returns matrix of probabilities as per specification of softmax function
-  double *output_vector = (double*)malloc(sizeof(double)*size);
+  float *output_vector = (float*)malloc(sizeof(float)*size);
 
-  double denominator  = 0.0;
+  float denominator  = 0.0;
   for(int i = 0;i<size;i++)
     denominator += expf(input_vector[i]);
 
@@ -19,8 +19,8 @@ double* softmax(double* input_vector,int size){
 /*
 int main(){
 
-  double  a[] = {2.2,3.1,-.9,1.9};
-  double * b = softmax(a,4);
+  float  a[] = {2.2,3.1,-.9,1.9};
+  float * b = softmax(a,4);
   for(int i = 0;i<4;i++)cout<<b[i]<<" "<<endl;
 
 }*/
